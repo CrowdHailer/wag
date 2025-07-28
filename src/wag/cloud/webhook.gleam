@@ -1,6 +1,5 @@
 import gleam/dynamic/decode
 import gleam/http/request
-import gleam/http/response
 import gleam/json
 import gleam/list
 import gleam/option.{type Option}
@@ -9,7 +8,13 @@ import oas/decodex
 import wag/cloud/contact_information.{type ContactInformation}
 import wag/decodex.{optional_field, sparse} as _
 
-pub fn verify(request, config, then) {
+pub type Verified {
+  Failed
+  Success(challenge: String)
+  Continue
+}
+
+pub fn verify(request, config) {
   let query = request.get_query(request) |> result.unwrap([])
   case list.key_find(query, "hub.mode") {
     Ok("subscribe") ->
@@ -17,13 +22,11 @@ pub fn verify(request, config, then) {
         Ok(token) if token == config -> {
           let challenge =
             list.key_find(query, "hub.challenge") |> result.unwrap("")
-          response.new(200)
-          |> response.set_body(<<challenge:utf8>>)
+          Success(challenge:)
         }
-        _ ->
-          response.new(403) |> response.set_body(<<"Verification failed":utf8>>)
+        _ -> Failed
       }
-    _ -> then()
+    _ -> Continue
   }
 }
 
