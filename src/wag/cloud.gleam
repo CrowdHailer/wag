@@ -234,31 +234,6 @@ pub fn send_message_request(token, from, to, message) {
   do_send_message_request(token, from, payload)
 }
 
-pub fn send_typing_indicator(token, from, message_id, indicate_typing) {
-  let payload = [
-    #("messaging_product", json.string("whatsapp")),
-    #("status", json.string("read")),
-    #("message_id", json.string(message_id)),
-    case indicate_typing {
-      True -> #(
-        "typing_indicator",
-        json.object([#("type", json.string("text"))]),
-      )
-      False -> #("typing_indicator", json.null())
-    },
-  ]
-  do_send_message_request(token, from, payload)
-}
-
-fn do_send_message_request(token, from, payload) {
-  post(
-    token,
-    "/" <> from <> "/messages",
-    "application/json",
-    json.to_string(decodex.sparse(payload)) |> bit_array.from_string,
-  )
-}
-
 pub type Contact {
   Contact(input: String, wa_id: String)
 }
@@ -295,6 +270,31 @@ pub fn send_message_response(response) {
     }
     _ -> Error(body)
   }
+}
+
+pub fn send_typing_indicator(token, from, message_id, indicate_typing) {
+  let payload = [
+    #("messaging_product", json.string("whatsapp")),
+    #("status", json.string("read")),
+    #("message_id", json.string(message_id)),
+    case indicate_typing {
+      True -> #(
+        "typing_indicator",
+        json.object([#("type", json.string("text"))]),
+      )
+      False -> #("typing_indicator", json.null())
+    },
+  ]
+  do_send_message_request(token, from, payload)
+}
+
+fn do_send_message_request(token, from, payload) {
+  post(
+    token,
+    "/" <> from <> "/messages",
+    "application/json",
+    json.to_string(decodex.sparse(payload)) |> bit_array.from_string,
+  )
 }
 
 pub fn retreive_media_request(token, media_id) {

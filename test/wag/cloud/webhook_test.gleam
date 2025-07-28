@@ -4,6 +4,7 @@ import gleeunit/should
 import wag/cloud/webhook
 
 fn decode(bytes) {
+  // bit_array.to_string(bytes) |> should.be_ok |> echo
   case json.parse_bits(bytes, webhook.decoder()) {
     Ok(value) -> value
     Error(reason) -> {
