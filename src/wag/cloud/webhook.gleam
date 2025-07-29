@@ -130,12 +130,24 @@ pub type Message {
   Message(from: String, id: String, timestamp: String, payload: MessagePayload)
 }
 
-fn message_decoder() {
+pub fn message_decoder() {
   use from <- decode.field("from", decode.string)
   use id <- decode.field("id", decode.string)
   use timestamp <- decode.field("timestamp", decode.string)
   use payload <- decode.then(payload_decoder())
   decode.success(Message(from:, id:, timestamp:, payload:))
+}
+
+pub fn encode_message(message) {
+  let Message(from:, id:, timestamp:, payload:) = message
+  let #(type_, payload) = encode_payload(payload)
+  json.object([
+    #("from", json.string(from)),
+    #("id", json.string(id)),
+    #("timestamp", json.string(timestamp)),
+    #("type", json.string(type_)),
+    #(type_, payload),
+  ])
 }
 
 pub type MessagePayload {
@@ -285,118 +297,78 @@ fn video_decoder() {
 
 pub fn encode_payload(payload) {
   case payload {
-    Audio(mime_type:, sha256:, id:, voice:) ->
-      json.object([
-        #("type", json.string("audio")),
-        #(
-          "audio",
-          sparse([
-            #("mime_type", json.string(mime_type)),
-            #("sha256", json.string(sha256)),
-            #("id", json.string(id)),
-            #("voice", json.bool(voice)),
-          ]),
-        ),
-      ])
-    Button(payload:, text:) ->
-      json.object([
-        #("type", json.string("button")),
-        #(
-          "button",
-          sparse([
-            #("payload", json.string(payload)),
-            #("text", json.string(text)),
-          ]),
-        ),
-      ])
-    Contacts(contacts) ->
-      json.object([
-        #("type", json.string("contacts")),
-        #("contacts", json.array(contacts, contact_information.encode)),
-      ])
-    Document(caption:, filename:, sha256:, mime_type:, id:) ->
-      json.object([
-        #("type", json.string("document")),
-        #(
-          "document",
-          sparse([
-            #("caption", json.nullable(caption, json.string)),
-            #("filename", json.string(filename)),
-            #("sha256", json.string(sha256)),
-            #("mime_type", json.string(mime_type)),
-            #("id", json.string(id)),
-          ]),
-        ),
-      ])
-    Image(caption:, mime_type:, sha256:, id:) ->
-      json.object([
-        #("type", json.string("image")),
-        #(
-          "image",
-          sparse([
-            #("caption", json.nullable(caption, json.string)),
-            #("mime_type", json.string(mime_type)),
-            #("sha256", json.string(sha256)),
-            #("id", json.string(id)),
-          ]),
-        ),
-      ])
-    Location(latitude:, longitude:, name:, address:, url:) ->
-      json.object([
-        #("type", json.string("location")),
-        #(
-          "location",
-          sparse([
-            #("address", json.nullable(address, json.string)),
-            #("latitude", json.float(latitude)),
-            #("longitude", json.float(longitude)),
-            #("name", json.nullable(name, json.string)),
-            #("url", json.nullable(url, json.string)),
-          ]),
-        ),
-      ])
-    Reaction(message_id:, emoji:) ->
-      json.object([
-        #("type", json.string("reaction")),
-        #(
-          "reaction",
-          sparse([
-            #("message_id", json.string(message_id)),
-            #("emoji", json.string(emoji)),
-          ]),
-        ),
-      ])
-    Sticker(mime_type:, sha256:, id:, animated:) ->
-      json.object([
-        #("type", json.string("sticker")),
-        #(
-          "sticker",
-          sparse([
-            #("mime_type", json.string(mime_type)),
-            #("sha256", json.string(sha256)),
-            #("id", json.string(id)),
-            #("animated", json.bool(animated)),
-          ]),
-        ),
-      ])
-    Text(text) ->
-      json.object([
-        #("type", json.string("text")),
-        #("text", json.object([#("body", json.string(text))])),
-      ])
-    Video(caption, mime_type, sha256, id) ->
-      json.object([
-        #("type", json.string("video")),
-        #(
-          "video",
-          sparse([
-            #("caption", json.nullable(caption, json.string)),
-            #("mime_type", json.string(mime_type)),
-            #("sha256", json.string(sha256)),
-            #("id", json.string(id)),
-          ]),
-        ),
-      ])
+    Audio(mime_type:, sha256:, id:, voice:) -> #(
+      "audio",
+      sparse([
+        #("mime_type", json.string(mime_type)),
+        #("sha256", json.string(sha256)),
+        #("id", json.string(id)),
+        #("voice", json.bool(voice)),
+      ]),
+    )
+    Button(payload:, text:) -> #(
+      "button",
+      sparse([#("payload", json.string(payload)), #("text", json.string(text))]),
+    )
+    Contacts(contacts) -> #(
+      "contacts",
+      json.array(contacts, contact_information.encode),
+    )
+    Document(caption:, filename:, sha256:, mime_type:, id:) -> #(
+      "document",
+      sparse([
+        #("caption", json.nullable(caption, json.string)),
+        #("filename", json.string(filename)),
+        #("sha256", json.string(sha256)),
+        #("mime_type", json.string(mime_type)),
+        #("id", json.string(id)),
+      ]),
+    )
+    Image(caption:, mime_type:, sha256:, id:) -> #(
+      "image",
+      sparse([
+        #("caption", json.nullable(caption, json.string)),
+        #("mime_type", json.string(mime_type)),
+        #("sha256", json.string(sha256)),
+        #("id", json.string(id)),
+      ]),
+    )
+    Location(latitude:, longitude:, name:, address:, url:) -> #(
+      "location",
+      sparse([
+        #("address", json.nullable(address, json.string)),
+        #("latitude", json.float(latitude)),
+        #("longitude", json.float(longitude)),
+        #("name", json.nullable(name, json.string)),
+        #("url", json.nullable(url, json.string)),
+      ]),
+    )
+    Reaction(message_id:, emoji:) -> #(
+      "reaction",
+      sparse([
+        #("message_id", json.string(message_id)),
+        #("emoji", json.string(emoji)),
+      ]),
+    )
+    Sticker(mime_type:, sha256:, id:, animated:) -> #(
+      "sticker",
+      sparse([
+        #("mime_type", json.string(mime_type)),
+        #("sha256", json.string(sha256)),
+        #("id", json.string(id)),
+        #("animated", json.bool(animated)),
+      ]),
+    )
+    Text(text) -> #("text", json.object([#("body", json.string(text))]))
+    Video(caption, mime_type, sha256, id) -> #(
+      "video",
+      sparse([
+        #("caption", json.nullable(caption, json.string)),
+        #("mime_type", json.string(mime_type)),
+        #("sha256", json.string(sha256)),
+        #("id", json.string(id)),
+      ]),
+    )
   }
 }
 
