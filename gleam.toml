@@ -1,5 +1,5 @@
 name = "wag"
-version = "0.1.0"
+version = "0.1.1"
 target = "javascript"
 
 # Fill out these fields if you intend to generate HTML documentation or publish
@@ -17,7 +17,7 @@ target = "javascript"
 gleam_stdlib = ">= 0.44.0 and < 2.0.0"
 gleam_json = ">= 2.3.0 and < 4.0.0"
 gleam_http = ">= 4.0.0 and < 5.0.0"
-oas = ">= 6.0.0 and < 7.0.0"
+oas = ">= 6.0.0 and < 8.0.0"
 
 [dev-dependencies]
 gleeunit = ">= 1.0.0 and < 2.0.0"
