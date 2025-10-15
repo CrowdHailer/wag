@@ -72,7 +72,6 @@ fn change_decoder() {
           decode.success,
         ))
       _ -> {
-        echo field
         Error("Unknown field: " <> field)
       }
     }

@@ -122,7 +122,7 @@ fn message_to_type_and_contents(message) {
         #("language", json.object([#("code", json.string(language))])),
         #(
           "components",
-          json.array(components, fn(_) { todo as "understand components" }),
+          json.array(components, fn(_) { panic as "components not supported" }),
         ),
       ]),
     )
@@ -171,7 +171,10 @@ fn interactive_to_json(interactive) {
       decodex.sparse([
         #("type", json.string("button")),
         // Not just media as text is an option
-        #("header", json.nullable(header, fn(source) { todo })),
+        #(
+          "header",
+          json.nullable(header, fn(_source) { panic as "not supported" }),
+        ),
         #("body", json.object([#("text", json.string(body))])),
         #(
           "footer",
@@ -188,7 +191,10 @@ fn interactive_to_json(interactive) {
       decodex.sparse([
         #("type", json.string("cta_url")),
         // Not just media as text is an option
-        #("header", json.nullable(header, fn(source) { todo })),
+        #(
+          "header",
+          json.nullable(header, fn(_source) { panic as "not supported" }),
+        ),
         #("body", json.object([#("text", json.string(body))])),
         #(
           "footer",
