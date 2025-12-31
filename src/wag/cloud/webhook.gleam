@@ -4,9 +4,8 @@ import gleam/json
 import gleam/list
 import gleam/option.{type Option}
 import gleam/result
-import oas/decodex
 import wag/cloud/contact_information.{type ContactInformation}
-import wag/decodex.{optional_field, sparse} as _
+import wag/decodex.{optional_field, sparse}
 
 pub type Verified {
   Failed

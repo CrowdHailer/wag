@@ -8,9 +8,6 @@ packages = [
   { name = "gleam_json", version = "3.0.2", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "gleam_json", source = "hex", outer_checksum = "874FA3C3BB6E22DD2BB111966BD40B3759E9094E05257899A7C08F5DE77EC049" },
   { name = "gleam_stdlib", version = "0.65.0", build_tools = ["gleam"], requirements = [], otp_app = "gleam_stdlib", source = "hex", outer_checksum = "7C69C71D8C493AE11A5184828A77110EB05A7786EBF8B25B36A72F879C3EE107" },
   { name = "gleeunit", version = "1.6.1", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "gleeunit", source = "hex", outer_checksum = "FDC68A8C492B1E9B429249062CD9BAC9B5538C6FBF584817205D0998C42E1DAC" },
-  { name = "non_empty_list", version = "2.1.0", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "non_empty_list", source = "hex", outer_checksum = "3BF1496B475F3F2CE2EA18157587329812493369B2A7C5B9DCFEA5C007670A3B" },
-  { name = "oas", version = "7.2.0", build_tools = ["gleam"], requirements = ["gleam_http", "gleam_json", "gleam_stdlib", "non_empty_list", "oas_generator_utils"], otp_app = "oas", source = "hex", outer_checksum = "7EA0C3535378E67302D8BB75B55F36F05B04542769CD1CC576F512AE329DE75D" },
-  { name = "oas_generator_utils", version = "1.0.0", build_tools = ["gleam"], requirements = ["gleam_http", "gleam_javascript", "gleam_json", "gleam_stdlib"], otp_app = "oas_generator_utils", source = "hex", outer_checksum = "153BDDC65C28B4D1188B6686055C000013C24AF63C3FF301617854819C25F2CE" },
 ]
 
 [requirements]
@@ -20,4 +17,3 @@ gleam_javascript = { version = ">= 1.0.0 and < 2.0.0" }
 gleam_json = { version = ">= 2.3.0 and < 4.0.0" }
 gleam_stdlib = { version = ">= 0.44.0 and < 2.0.0" }
 gleeunit = { version = ">= 1.0.0 and < 2.0.0" }
-oas = { version = ">= 6.0.0 and < 8.0.0" }
